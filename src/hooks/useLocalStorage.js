@@ -1,17 +1,25 @@
 import { useState, useEffect } from "react";
 
+function readStoredValue(key, defaultValue) {
+  const saved = localStorage.getItem(key);
+  return saved !== null ? JSON.parse(saved) : defaultValue;
+}
 export function useLocalStorage(key, defaultValue) {
-  const [value, setValue] = useState(() => {
-    const saved = localStorage.getItem(key);
-    return saved !== null ? JSON.parse(saved) : defaultValue;
-  });
+  const [state, setState] = useState(() => ({
+    key,
+    value: readStoredValue(key, defaultValue),
+  }));
+  const value = state.key === key ? state.value : readStoredValue(key, defaultValue);
 
-  // Re-initialize when key changes (e.g. user switches account)
-  useEffect(() => {
-    const saved = localStorage.getItem(key);
-    setValue(saved !== null ? JSON.parse(saved) : defaultValue);
-  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
-
+  const setValue = (nextValue) => {
+    setState((current) => {
+      const currentValue =
+        current.key === key ? current.value : readStoredValue(key, defaultValue);
+      const resolvedValue =
+        typeof nextValue === "function" ? nextValue(currentValue) : nextValue;
+      return { key, value: resolvedValue };
+    });
+  };
   useEffect(() => {
     if (value === null || value === undefined) {
       localStorage.removeItem(key);

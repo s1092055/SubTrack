@@ -6,7 +6,7 @@ export default function Toggle({ enabled, onToggle }) {
       aria-checked={enabled}
       onClick={onToggle}
       className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200 ${
-        enabled ? "bg-[#1d3557]" : "bg-slate-200"
+        enabled ? "bg-[var(--color-primary)]" : "bg-slate-200"
       }`}
     >
       <span

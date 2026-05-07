@@ -1,0 +1,190 @@
+/* ============================================================
+ * SubTrack Design Token System
+ * ============================================================
+ * Single source of truth for all design decisions.
+ *
+ * Structure:
+ *   1. @theme  — Tailwind v4 utility generation (bg-*, text-*, rounded-*, shadow-*)
+ *   2. :root   — Semantic tokens (--color-*, --radius-*, --shadow-*, etc.)
+ *   3. :root   — Backward-compat aliases (--subtrack-* → new tokens)
+ * ============================================================ */
+
+/* ── 1. Tailwind @theme ─────────────────────────────────────
+ * These generate Tailwind utility classes.
+ * e.g. --color-subtrack-card → bg-subtrack-card, text-subtrack-card
+ *      --radius-card → rounded-card
+ *      --shadow-card → shadow-card
+ * ─────────────────────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-brand:                #6f8f72;
+  --color-brand-dark:           #4f6f54;
+  --color-brand-muted:          #e6eee2;
+
+  --color-subtrack-bg:          #f7f4ed;
+  --color-subtrack-surface:     #fffdf8;
+  --color-subtrack-card:        #ffffff;
+  --color-subtrack-panel:       #fbfaf6;
+  --color-subtrack-line:        #e8e1d6;
+  --color-subtrack-text:        #242821;
+  --color-subtrack-muted:       #6f776d;
+  --color-subtrack-primary:     #6f8f72;
+  --color-subtrack-primary-soft:#e6eee2;
+  --color-subtrack-alert:       #d8a96b;
+  --color-subtrack-alert-soft:  #f5ead8;
+
+  /* Radius */
+  --radius-card:   1.5rem;
+  --radius-panel:  1.75rem;
+  --radius-modal:  1.5rem;
+
+  /* Shadows */
+  --shadow-card:  0 10px 30px oklch(42% 0.04 95 / 0.08);
+  --shadow-panel: 0 18px 54px oklch(42% 0.04 95 / 0.1);
+}
+
+/* ── 2. Semantic Design Tokens ──────────────────────────────
+ * Use these in new components and when updating existing ones.
+ * Prefer semantic names over raw hex values in component code.
+ * ─────────────────────────────────────────────────────────── */
+:root {
+  /* ── Color ─────────────────────────────────────────────── */
+  --color-primary:        #6f8f72;  /* sage green — primary brand action */
+  --color-primary-strong: #4f6f54;  /* darker green — hover, emphasis */
+  --color-primary-soft:   #e6eee2;  /* tinted green — bg chip, active state */
+  --color-primary-subtle: #f2f6f0;  /* very light — subtle highlight */
+
+  --color-bg:      #f7f4ed;  /* page background */
+  --color-surface: #fffdf8;  /* slightly warm white — section bg */
+  --color-card:    #ffffff;  /* card background */
+  --color-panel:   #fbfaf6;  /* sidebar / panel background */
+  --color-border:  #e8e1d6;  /* all borders and dividers */
+
+  --color-text-primary:        #242821;  /* body copy */
+  --color-text-secondary:      #1d3557;  /* navy — headings, labels, CTA buttons */
+  --color-text-secondary-strong:#162843;  /* darker navy — hover state */
+  --color-text-muted:          #6f776d;  /* secondary / helper text */
+
+  --color-warning:      #d8a96b;    /* amber — billing alert */
+  --color-warning-soft: #f5ead8;    /* amber tint — alert bg */
+  --color-danger:       #ef4444;    /* red — destructive action */
+  --color-danger-soft:  #fef2f2;    /* red tint — danger bg */
+
+  /* ── Radius ─────────────────────────────────────────────── */
+  --radius-xs:    0.25rem;   /* 4px  — small badges, tags */
+  --radius-sm:    0.5rem;    /* 8px  — inner chip, sub-elements */
+  --radius-md:    0.75rem;   /* 12px — buttons, inputs */
+  --radius-lg:    1rem;      /* 16px — rounded-2xl equivalent */
+  /* --radius-card and --radius-panel are in @theme above */
+  --radius-modal: 1.5rem;    /* modal dialogs — same as card */
+  --radius-pill:  9999px;    /* fully rounded pill */
+
+  /* ── Shadow ─────────────────────────────────────────────── */
+  --shadow-sm:      0 1px 4px oklch(0% 0 0 / 0.06);
+  /* --shadow-card and --shadow-panel are in @theme above */
+  --shadow-modal:   0 24px 64px oklch(0% 0 0 / 0.18);
+  --shadow-sidebar: -4px 0 24px oklch(0% 0 0 / 0.12);  /* mobile sidebar (slides in from right) */
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-family-base: "Plus Jakarta Sans", "PingFang TC", "Microsoft JhengHei", sans-serif;
+
+  --text-xs:           0.75rem;   /* 12px */
+  --text-sm:           0.875rem;  /* 14px */
+  --text-md:           1rem;      /* 16px */
+  --text-lg:           1.125rem;  /* 18px */
+  --text-xl:           1.25rem;   /* 20px */
+  --text-2xl:          1.5rem;    /* 24px */
+  --text-page-title:   1.75rem;   /* 28px — h1 on pages */
+  --text-section-title:1.125rem;  /* 18px — section heading */
+  --text-card-value:   2rem;      /* 32px — big financial number */
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  --sidebar-width-collapsed: 4.75rem;   /* 76px  — icon-only desktop sidebar */
+  --sidebar-width-expanded:  16.25rem;  /* 260px — hover-expanded desktop sidebar */
+  --topbar-height:           3.5rem;    /* 56px  — mobile TopBar */
+  --content-max-width:       80rem;     /* 1280px — max content width */
+  --page-padding-x:          2.5rem;    /* horizontal page padding */
+  --page-padding-y:          2rem;      /* vertical page padding */
+
+  /* ── Modal ──────────────────────────────────────────────── */
+  --modal-width-sm:  24rem;   /* 384px — DeleteConfirmModal */
+  --modal-width-md:  42rem;   /* 672px — SubDetailModal */
+  --modal-width-lg:  58.5rem; /* 936px — AddSubModal */
+  --modal-width-xl:  72rem;   /* 1152px — reserved */
+  --modal-max-height:90vh;
+  --modal-padding-sm:1.5rem;
+  --modal-padding-md:1.75rem;
+  --modal-padding-lg:2rem;
+
+  /* ── Z-index ─────────────────────────────────────────────── */
+  --z-sidebar:        40;
+  --z-mobile-overlay: 40;
+  --z-modal:          50;
+  --z-toast:          60;
+}
+
+/* ── 3. shadcn Semantic Token Bridge ────────────────────────
+ * Maps shadcn's expected CSS variable names → SubTrack tokens.
+ * shadcn components that reference var(--primary) etc. will
+ * automatically pick up SubTrack's visual style.
+ * Do NOT use these names in new SubTrack components —
+ * prefer the --color-* semantic tokens from section 2.
+ * ─────────────────────────────────────────────────────────── */
+:root {
+  --background:          var(--color-bg);
+  --foreground:          var(--color-text-primary);
+
+  --card:                var(--color-card);
+  --card-foreground:     var(--color-text-primary);
+
+  --popover:             var(--color-card);
+  --popover-foreground:  var(--color-text-primary);
+
+  --primary:             var(--color-primary);
+  --primary-foreground:  #ffffff;
+
+  --secondary:           var(--color-primary-soft);
+  --secondary-foreground:var(--color-primary-strong);
+
+  --muted:               var(--color-panel);
+  --muted-foreground:    var(--color-text-muted);
+
+  --accent:              var(--color-primary-subtle);
+  --accent-foreground:   var(--color-primary-strong);
+
+  --border:              var(--color-border);
+  --input:               var(--color-border);
+  --ring:                var(--color-primary);
+
+  --destructive:         var(--color-danger);
+  --destructive-foreground: #ffffff;
+
+  /* shadcn base radius — maps to SubTrack --radius-md (12px).
+   * SubTrack-specific radius tokens (--radius-card, --radius-modal, etc.)
+   * remain the authority; this only satisfies shadcn's single --radius var. */
+  --radius:              var(--radius-md);
+}
+
+/* ── 4. Backward-compat Aliases ─────────────────────────────
+ * Legacy --subtrack-* variables now point to the semantic tokens.
+ * Existing JSX using var(--subtrack-*) continues to work unchanged.
+ * Do not add new usages — prefer the semantic names above.
+ * ─────────────────────────────────────────────────────────── */
+:root {
+  --subtrack-bg:             var(--color-bg);
+  --subtrack-surface:        var(--color-surface);
+  --subtrack-card:           var(--color-card);
+  --subtrack-panel:          var(--color-panel);
+  --subtrack-line:           var(--color-border);
+  --subtrack-text:           var(--color-text-primary);
+  --subtrack-muted:          var(--color-text-muted);
+  --subtrack-primary:        var(--color-primary);
+  --subtrack-primary-strong: var(--color-primary-strong);
+  --subtrack-primary-soft:   var(--color-primary-soft);
+  --subtrack-alert:          var(--color-warning);
+  --subtrack-alert-soft:     var(--color-warning-soft);
+  --subtrack-radius-card:    var(--radius-card);
+  --subtrack-radius-panel:   var(--radius-panel);
+  --subtrack-shadow-card:    var(--shadow-card);
+  --subtrack-shadow-panel:   var(--shadow-panel);
+}

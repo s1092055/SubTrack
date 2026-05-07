@@ -12,12 +12,6 @@ export function getStatusInfo(days) {
   return { label: "待扣款", dot: "bg-slate-300", text: "text-slate-500" };
 }
 
-export function getDaysTextClass(days) {
-  if (days <= 3) return "text-red-400 font-medium";
-  if (days <= 7) return "text-amber-400";
-  return "text-slate-400";
-}
-
 export function formatMoney(val) {
   return val ? `NT$ ${Number(val).toLocaleString()}` : "未填寫";
 }

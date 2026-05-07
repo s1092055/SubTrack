@@ -5,15 +5,12 @@ export const CATEGORIES = {
   其他: { badge: "bg-gray-100 text-gray-600", color: "#94a3b8" },
 };
 
-export const CATEGORY_NAMES = Object.keys(CATEGORIES);
-
 export const DEFAULT_CATEGORY_LIST = [
   { name: "娛樂", color: "#a78bfa" },
   { name: "工作", color: "#60a5fa" },
   { name: "生活", color: "#34d399" },
   { name: "其他", color: "#94a3b8" },
 ];
-
 export const getCategoryColor = (name) =>
   (CATEGORIES[name] || CATEGORIES["其他"]).color;
 

@@ -1,5 +1,13 @@
-export function billingTotalForMonth(subscriptions, year, month) {
+function subExistedInMonth(sub, year, month, accountCreatedAt) {
+  const floor = sub.createdAt ?? accountCreatedAt;
+  if (!floor) return true;
+  const created = new Date(floor);
+  return created <= new Date(year, month + 1, 0);
+}
+
+export function billingTotalForMonth(subscriptions, year, month, accountCreatedAt) {
   return subscriptions.reduce((acc, sub) => {
+    if (!subExistedInMonth(sub, year, month, accountCreatedAt)) return acc;
     const personal = sub.price / sub.sharedWith;
     if (sub.cycle === "monthly") return acc + personal;
     const d = new Date(sub.nextBillingDate);
@@ -7,21 +15,24 @@ export function billingTotalForMonth(subscriptions, year, month) {
   }, 0);
 }
 
-export function getPast6MonthsData(subscriptions, today) {
+export function getPast6MonthsData(subscriptions, refYear, refMonth, accountCreatedAt) {
   return Array.from({ length: 6 }, (_, i) => {
-    const d = new Date(today.getFullYear(), today.getMonth() - 5 + i, 1);
+    const d = new Date(refYear, refMonth - 5 + i, 1);
+    const year = d.getFullYear();
+    const month = d.getMonth();
     const byCat = {};
     subscriptions.forEach((sub) => {
+      if (!subExistedInMonth(sub, year, month, accountCreatedAt)) return;
       const personal = sub.price / sub.sharedWith;
       const billingDate = new Date(sub.nextBillingDate);
       const isYearlyHit =
         sub.cycle === "yearly" &&
-        billingDate.getMonth() === d.getMonth() &&
-        billingDate.getFullYear() === d.getFullYear();
+        billingDate.getMonth() === month &&
+        billingDate.getFullYear() === year;
       if (sub.cycle === "monthly" || isYearlyHit) {
         byCat[sub.category] = (byCat[sub.category] || 0) + personal;
       }
     });
-    return { month: `${d.getMonth() + 1}月`, isCurrent: i === 5, byCat };
+    return { month: `${month + 1}月`, year, monthNum: month, isCurrent: i === 5, byCat };
   });
 }

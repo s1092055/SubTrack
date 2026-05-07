@@ -1,37 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
+@import "./styles/tokens.css";
 
-@theme {
-  --color-brand: #1d3557;
-  --color-brand-dark: #162843;
-  --color-brand-muted: #a8c4dc;
-}
-
-/*
-  流體字型根基：在 1024px ~ 2560px 之間，
-  根字體從 16px 線性縮放至 20px。
-*/
+/* ── Fluid Typography ───────────────────────────────────────
+ * clamp(min, fluid, max) keeps text readable across viewport widths.
+ * ─────────────────────────────────────────────────────────── */
 html {
   font-size: clamp(16px, 13.33px + 0.26vw, 20px);
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable; /* prevents layout shift when scrollbar appears */
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
 }
 
 * {
-  font-family: "Plus Jakarta Sans", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  font-family: var(--font-family-base);
 }
 
-
-/* 財務數字使用等寬數字，避免數字跳動 */
+/* Financial numbers — prevent digit-width jitter */
 .tabular {
   font-variant-numeric: tabular-nums;
 }
 
-/* 所有 button 預設 cursor-pointer */
 button:not(:disabled) {
   cursor: pointer;
 }
 
-/* 隱藏 scrollbar 但保留捲動功能 */
+/* Hide scrollbar while preserving scroll */
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -40,7 +37,141 @@ button:not(:disabled) {
   display: none;
 }
 
-/* Modal 淡入 + 輕微縮放 */
+.stable-scrollbar-gutter {
+  scrollbar-gutter: stable both-edges;
+}
+
+/* ── Sidebar-aware main content offset ─────────────────────
+ * Accounts for the collapsed sidebar width on desktop.
+ * Replace lg:pl-[6.75rem] with this class.
+ * ─────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .lg-sidebar-offset {
+    padding-left: calc(var(--sidebar-width-collapsed) + 2rem);
+  }
+}
+
+/* ── Reusable UI Primitives ─────────────────────────────────
+ * Use these classes instead of repeating the same Tailwind
+ * token combos across components.
+ * ─────────────────────────────────────────────────────────── */
+
+.st-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.st-panel {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+.st-button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  padding: 0.625rem 1.25rem;
+  transition: background-color 150ms;
+}
+.st-button-primary:hover {
+  background: var(--color-primary-strong);
+}
+
+.st-button-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  padding: 0.625rem 1.25rem;
+  transition: background-color 150ms, color 150ms;
+}
+.st-button-secondary:hover {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+}
+
+.st-input {
+  width: 100%;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  padding: 0.625rem 0.875rem;
+  outline: none;
+  transition: border-color 150ms;
+}
+.st-input:focus {
+  border-color: var(--color-primary);
+}
+.st-input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.st-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.st-modal {
+  background: var(--color-card);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-modal);
+  max-height: var(--modal-max-height);
+  width: 100%;
+  overflow: hidden;
+}
+
+.st-page-title {
+  font-size: var(--text-page-title);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.st-section-title {
+  font-size: var(--text-section-title);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.st-muted-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.st-icon-soft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  border-radius: var(--radius-pill);
+}
+
+/* ── Animations ─────────────────────────────────────────────
+ * Keep animation logic here, not in tokens.
+ * ─────────────────────────────────────────────────────────── */
 @keyframes modal-in {
   from { opacity: 0; transform: scale(0.96); }
   to   { opacity: 1; transform: scale(1); }
@@ -49,7 +180,6 @@ button:not(:disabled) {
   animation: modal-in 200ms ease-out;
 }
 
-/* 頁面切換淡入 */
 @keyframes page-fade-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -58,7 +188,6 @@ button:not(:disabled) {
   animation: page-fade-in 220ms ease-out;
 }
 
-/* 列表列交錯淡入 */
 @keyframes row-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -66,4 +195,12 @@ button:not(:disabled) {
 .row-enter {
   animation: row-in 250ms ease-out both;
   animation-delay: calc(var(--row-index, 0) * 45ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
